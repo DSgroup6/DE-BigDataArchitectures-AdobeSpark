@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  spark-driver-app:
+    build:
+      context: jupyter-all-spark-notebook-gcp
+    ports:
+      - "8888:8888"
+      - "4040:4040"
+  spark-master:
+    build:
+      context: ./spark-bitnami-python3.10
+    container_name: spark-master    
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+  spark-worker-1:
+    build:
+      context: ./spark-bitnami-python3.10
+    ports:
+      - "8081:8081"
+  spark-worker-2:
+    build:
+      context: ./spark-bitnami-python3.10
+    container_name: spark-worker-2
+    ports:
+      - "8082:8081"
+  zookeeper:
+    image: zookeeper:3.4.9
+    ports:
+      - "2181:2181"
+  kafka1:
+    image: confluentinc/cp-kafka:5.2.5
+    ports:
+      - "9092:9092" 
+volumes:
+  spark
+
+# https://github.com/IndikaKuma/DE2022
