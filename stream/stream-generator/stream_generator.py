@@ -4,7 +4,7 @@ from kafka import KafkaProducer
 
 def load_df():
   bucket_name = "group6_chicagocrime"
-  file_name = 'chicago_crimes2.csv'
+  file_name = 'chicago_crimes3.csv'
   # url = f'D:/Datasets/sna/crime_data/{file_name}' 
   url = f'gs://{bucket_name}/{file_name}'
   df = pd.read_csv(url)
