@@ -51,7 +51,7 @@ print('start sending messages')
 for i in range(len(df)-1):
     crime = df.loc[i].to_json()
     # print(crime)
-    kafka_python_producer_sync(producer, crime, 'crimes')
+    kafka_python_producer_sync(producer, crime, 'crimes2')
     
     # publisher.publish(topic_url, crime.encode('utf-8'))
     time.sleep(1)
@@ -64,12 +64,3 @@ print('finished sending messages')
   
   
 
-# df['Date'] = pd.to_datetime(df['Date'])
-# print('sorting...')
-
-# df = df[df['Date'].dt.year == 2015]
-# print('only subset selected')
-
-# df = df.sort_values(by ='Date',inplace=False)
-
-# df.to_csv('D:/Datasets/sna/crime_data/chicago_crimes2.csv')
