@@ -5,22 +5,14 @@ import json
 from google.cloud import pubsub
 import pandas as pd
 # from google.cloud import storage
-
+import datetime as dt
 def load_df():
-
-  # storage_client = storage.Client()
   bucket_name = "group6_chicagocrime"
-  file_name = 'chicago_crimes.csv'
-  # url = 'D:/Datasets/sna/crime_data/chicago_crimes.csv' 
+  file_name = 'chicago_crimes2.csv'
+  # url = f'D:/Datasets/sna/crime_data/{file_name}' 
   url = f'gs://{bucket_name}/{file_name}'
   df = pd.read_csv(url)
-  # Creates the new bucket
-  # bucket = storage_client.create_bucket(bucket_name)
-  # blob = bucket.blob()
-  # print(f"Bucket {bucket.name} created.")
 
-  # with blob.open("r") as f:
-  # 	file = pd.read_csv(f.read())
   return df
 
 PROJECT = 'datatengineering-group6'
@@ -35,16 +27,29 @@ topic_url = 'projects/{project_id}/topics/{topic}'.format(
 
 print('loading df...')
 df = load_df()
-
 print('df has been loaded')
+print(f'length: {len(df)}')
 
-for i in range(10000):
+# df['Date'] = pd.to_datetime(df['Date'])
+# print('sorting...')
+
+# df = df[df['Date'].dt.year == 2015]
+# print('only subset selected')
+
+# df = df.sort_values(by ='Date',inplace=False)
+
+# df.to_csv('D:/Datasets/sna/crime_data/chicago_crimes2.csv')
+
+print('file safed')
+
+for i in range(len(df)-1):
     crime = df.loc[i].to_json()
     # print(crime)
     publisher.publish(topic_url, crime.encode('utf-8'))
     time.sleep(0.1)
 
 
+# from tutoria: https://cloud.google.com/architecture/using-apache-spark-dstreams-with-dataproc-and-pubsub
 #gcloud pubsub topics create crimes
 # gcloud pubsub subscriptions create crimes-subscription --topic=crimes
   
