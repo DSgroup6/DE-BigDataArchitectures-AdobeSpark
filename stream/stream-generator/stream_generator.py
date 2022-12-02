@@ -24,11 +24,25 @@ topic_url = 'projects/{project_id}/topics/{topic}'.format(
     topic=TOPIC_NAME,
 )
 
-
 print('loading df...')
 df = load_df()
 print('df has been loaded')
-print(f'length: {len(df)}')
+print(f'amount of records: {len(df)}')
+
+print('start sending messages')
+for i in range(len(df)-1):
+    crime = df.loc[i].to_json()
+    # print(crime)
+    publisher.publish(topic_url, crime.encode('utf-8'))
+    time.sleep(0.1)
+print('finished sending messages')
+
+# from tutoria: https://cloud.google.com/architecture/using-apache-spark-dstreams-with-dataproc-and-pubsub
+#gcloud pubsub topics create crimes
+# gcloud pubsub subscriptions create crimes-subscription --topic=crimes
+  
+  
+  
 
 # df['Date'] = pd.to_datetime(df['Date'])
 # print('sorting...')
@@ -39,19 +53,3 @@ print(f'length: {len(df)}')
 # df = df.sort_values(by ='Date',inplace=False)
 
 # df.to_csv('D:/Datasets/sna/crime_data/chicago_crimes2.csv')
-
-print('file safed')
-
-for i in range(len(df)-1):
-    crime = df.loc[i].to_json()
-    # print(crime)
-    publisher.publish(topic_url, crime.encode('utf-8'))
-    time.sleep(0.1)
-
-
-# from tutoria: https://cloud.google.com/architecture/using-apache-spark-dstreams-with-dataproc-and-pubsub
-#gcloud pubsub topics create crimes
-# gcloud pubsub subscriptions create crimes-subscription --topic=crimes
-  
-  
-  
