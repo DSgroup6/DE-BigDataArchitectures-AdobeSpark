@@ -34,8 +34,6 @@ df = load_df()
 print('df has been loaded')
 print(f'amount of records: {len(df)}')
 
-
-
 producer = KafkaProducer(bootstrap_servers='34.136.201.42:9092')
 
 def success(metadata):
