@@ -4,7 +4,7 @@ import time
 import json
 from google.cloud import pubsub
 import pandas as pd
-from google.cloud import storage
+# from google.cloud import storage
 
 def load_df():
 
