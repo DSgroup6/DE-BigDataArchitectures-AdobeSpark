@@ -24,4 +24,4 @@ consumer = KafkaConsumer(bootstrap_servers='34.136.201.42:9092',  # use your VM'
                           auto_offset_reset='earliest',
                            consumer_timeout_ms=10000)
 print(consumer.topics())
-read_from_topic(consumer, 'crimes')
+read_from_topic(consumer, 'crimes_processed')
