@@ -1,11 +1,7 @@
-import os
-import sys
 import time
-import json
-from google.cloud import pubsub
 import pandas as pd
-# from google.cloud import storage
-import datetime as dt
+from kafka import KafkaProducer
+
 def load_df():
   bucket_name = "group6_chicagocrime"
   file_name = 'chicago_crimes2.csv'
@@ -15,26 +11,52 @@ def load_df():
 
   return df
 
-PROJECT = 'datatengineering-group6'
-TOPIC_NAME = 'crimes'
+def kafka_python_producer_sync(producer, msg, topic):
+    producer.send(topic, bytes(msg, encoding='utf-8'))
+    print("Sending " + msg)
+    producer.flush(timeout=60)
 
-publisher = pubsub.PublisherClient()
-topic_url = 'projects/{project_id}/topics/{topic}'.format(
-    project_id=PROJECT,
-    topic=TOPIC_NAME,
-)
+
+def success(metadata):
+    print(metadata.topic)
+
+
+def error(exception):
+    print(exception)
+
+
+def kafka_python_producer_async(producer, msg, topic):
+    producer.send(topic, bytes(msg, encoding='utf-8')).add_callback(success).add_errback(error)
+    producer.flush()
 
 print('loading df...')
 df = load_df()
 print('df has been loaded')
 print(f'amount of records: {len(df)}')
 
+
+
+producer = KafkaProducer(bootstrap_servers='34.136.201.42:9092')
+
+def success(metadata):
+    print(metadata.topic)
+def error(exception):
+    print(exception)
+
+def kafka_python_producer_async(producer, msg, topic):
+    producer.send(topic, bytes(msg, encoding='utf-8')).add_callback(success).add_errback(error)
+    producer.flush()
+
+
+
 print('start sending messages')
 for i in range(len(df)-1):
     crime = df.loc[i].to_json()
     # print(crime)
-    publisher.publish(topic_url, crime.encode('utf-8'))
-    time.sleep(0.1)
+    kafka_python_producer_sync(producer, crime, 'crimes')
+    
+    # publisher.publish(topic_url, crime.encode('utf-8'))
+    time.sleep(1)
 print('finished sending messages')
 
 # from tutoria: https://cloud.google.com/architecture/using-apache-spark-dstreams-with-dataproc-and-pubsub
