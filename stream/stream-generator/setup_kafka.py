@@ -5,7 +5,7 @@ def setup_kafka():
     
   admin_client = KafkaAdminClient(bootstrap_servers="34.136.201.42:90922",
                                   client_id='datatengineering-group6')  # use your VM's external IP Here!
-  topic_list = [NewTopic(name="crimes", num_partitions=1, replication_factor=1)]
+  topic_list = [NewTopic(name="chicago_crimes", num_partitions=1, replication_factor=1), NewTopic(name="chicago_crimes_per_community", num_partitions=1, replication_factor=1)]
   create_topics(admin_client, topic_list)
 
 if __name__ == '__main__':
