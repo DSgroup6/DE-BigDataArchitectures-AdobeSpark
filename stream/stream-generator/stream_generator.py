@@ -34,7 +34,7 @@ df = load_df()
 print('df has been loaded')
 print(f'amount of records: {len(df)}')
 
-producer = KafkaProducer(bootstrap_servers='34.136.201.42:9092')
+producer = KafkaProducer(bootstrap_servers='34.27.65.215:9092')
 
 def success(metadata):
     print(metadata.topic)
@@ -50,11 +50,11 @@ def kafka_python_producer_async(producer, msg, topic):
 print('start sending messages')
 for i in range(len(df)-1):
     crime = df.loc[i].to_json()
-    # print(crime)
-    kafka_python_producer_sync(producer, crime, 'crimes2')
+    print(crime)
+    kafka_python_producer_sync(producer, crime, 'crime_events')
     
     # publisher.publish(topic_url, crime.encode('utf-8'))
-    time.sleep(1)
+    time.sleep(0.5)
 print('finished sending messages')
 
 # from tutoria: https://cloud.google.com/architecture/using-apache-spark-dstreams-with-dataproc-and-pubsub
