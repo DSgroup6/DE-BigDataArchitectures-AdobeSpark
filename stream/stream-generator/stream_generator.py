@@ -4,7 +4,7 @@ from kafka import KafkaProducer
 
 def load_df():
   bucket_name = "group6_chicagocrime"
-  file_name = 'chicago_crimes3.csv'
+  file_name = 'crimes_in_chicago_streamdata.csv'
   # url = f'D:/Datasets/sna/crime_data/{file_name}' 
   url = f'gs://{bucket_name}/{file_name}'
   df = pd.read_csv(url)
@@ -16,14 +16,11 @@ def kafka_python_producer_sync(producer, msg, topic):
     print("Sending " + msg)
     producer.flush(timeout=60)
 
-
 def success(metadata):
     print(metadata.topic)
 
-
 def error(exception):
     print(exception)
-
 
 def kafka_python_producer_async(producer, msg, topic):
     producer.send(topic, bytes(msg, encoding='utf-8')).add_callback(success).add_errback(error)
@@ -45,16 +42,14 @@ def kafka_python_producer_async(producer, msg, topic):
     producer.send(topic, bytes(msg, encoding='utf-8')).add_callback(success).add_errback(error)
     producer.flush()
 
-
-
 print('start sending messages')
 for i in range(len(df)-1):
     crime = df.loc[i].to_json()
     print(crime)
-    kafka_python_producer_sync(producer, crime, 'crime_events')
+    kafka_python_producer_sync(producer, crime, 'crimes')
     
     # publisher.publish(topic_url, crime.encode('utf-8'))
-    time.sleep(0.5)
+    time.sleep(1)
 print('finished sending messages')
 
 # from tutoria: https://cloud.google.com/architecture/using-apache-spark-dstreams-with-dataproc-and-pubsub
