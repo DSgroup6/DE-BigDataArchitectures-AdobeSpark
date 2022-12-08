@@ -20,7 +20,7 @@ def read_from_topic_with_partition_offset(kafka_consumer, topic):
         if msg.offset == last_offset - 1:
             break
 
-consumer = KafkaConsumer(bootstrap_servers='35.222.32.7:9092',  # use your VM's external IP Here!
+consumer = KafkaConsumer(bootstrap_servers='34.69.61.99:9092',  # use your VM's external IP Here!
                           auto_offset_reset='earliest',
                            consumer_timeout_ms=10000)
 print(consumer.topics())
