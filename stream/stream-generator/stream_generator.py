@@ -5,7 +5,6 @@ from kafka import KafkaProducer
 def load_df():
   bucket_name = "group6_chicagocrime"
   file_name = 'crimes_in_chicago_streamdata.csv'
-  # url = f'D:/Datasets/sna/crime_data/{file_name}' 
   url = f'gs://{bucket_name}/{file_name}'
   df = pd.read_csv(url)
 
@@ -43,12 +42,13 @@ def kafka_python_producer_async(producer, msg, topic):
     producer.flush()
 
 print('start sending messages')
-for i in range(len(df)-1):
+total = len(df)-1
+for i in range(total):
     crime = df.loc[i].to_json()
+    print(f'Record {i} of {total}')
     print(crime)
     kafka_python_producer_sync(producer, crime, 'crimes')
-    
-    # publisher.publish(topic_url, crime.encode('utf-8'))
+
     time.sleep(1)
 print('finished sending messages')
 
